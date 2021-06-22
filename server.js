@@ -1,3 +1,4 @@
+const mysql = require('mysql2');
 const express = require('express');
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -6,6 +7,20 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// Connect to database
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        // Your MySQL username
+        user: 'root',
+        // Your MySQL password
+        password: '8b!tshIk@ny8',
+        database: 'election'
+    },
+    console.log('Connected to the election database.')
+);
+
+
 // GET test route to make sure connection to express.js is confirmed:
 // app.get('/', (req, res) => {
 //     res.json({
@@ -13,7 +28,11 @@ app.use(express.json());
 //     });
 // });
 
-// Default response for any other request (Not Found)
+db.query(`SELECT * FROM candidates`, (err, rows) => {
+    console.log(rows);
+});
+
+// Default response for any other request (Not Found) / CATCHALL ROUTE
 app.use((req, res) => {
     res.status(404).end();
 });
